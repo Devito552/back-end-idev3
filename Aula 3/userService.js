@@ -39,9 +39,9 @@ class userService {
         }
     }
 
-    addUser(nome, email) { //função para adicionar usuario
+    addUser(nome, email, senha, endereco, telefone, cfp) { //função para adicionar usuario
         try {
-            const user = new User(this.nextId++, nome, email);
+            const user = new User(this.nextId++, nome, email, senha, endereco, telefone, cfp); //cria um novo usuario
             this.users.push(user);//adiciona o usuario no array
             this.saveUsers();//salva o usuario
             return user;
