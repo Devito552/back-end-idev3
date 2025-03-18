@@ -9,7 +9,7 @@ class userService {
         this.nextId = this.getNextId(); //contador para gerar id
     }
 
-    loadUsers() {
+    loadUsers() { //carregar os usuarios do JSON (Banco)
         try { //tenta executar o bloco de codigo
             if (fs.existsSync(this.filePath)) { //verifica se o arquivo existe
                 const data = fs.readFileSync(this.filePath); //le o arquivo
@@ -55,6 +55,33 @@ class userService {
             return this.users
         } catch (erro) {
             console.log('Erro ao buscar usuarios', erro);
+        }
+    }
+
+    deleteUser(id){
+        try{
+            this.users = this.users.filter(user => user.id !== id);
+            this.saveUsers();
+
+        }catch{
+            console.log('Erro ao deletar usuario', erro);
+        }
+    }
+
+    updateUser(id, nome, email, senha, endereco, telefone, cpf){
+        try{
+            const user = this.users.find(user => user.id === id);
+            if(!user) throw new Error('Usuario não encontrado');
+            user.nome = nome;
+            user.email = email;
+            user.senha = senha;
+            user.endereco = endereco;
+            user.telefone = telefone;
+            user.cpf = cpf;
+            this.saveUsers();
+            return user;
+        }catch(erro){
+            console.log('Erro ao atualizar usuario', erro);
         }
     }
 

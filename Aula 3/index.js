@@ -4,7 +4,7 @@ const userService = require('./userService');
 const app = express(); //nome qualquer para express
 app.use(express.json()); // vou habilitar json no express
 
-suserService.loadUsers();
+userService.loadUsers();
 userService.getNextId();
 
 app.post("/users", (req, res) =>{
@@ -22,6 +22,32 @@ app.post("/users", (req, res) =>{
 //rota para listar todos os usuarios
 app.get("/users", (req, res) =>{
     res.json(userService.getUsers());
+});
+
+// Rota para excluir um usuário pelo ID
+app.delete("/users/:id", (req, res) => {
+    const id = parseInt(req.params.id); 
+    // Converte o ID para número
+    try {
+        const resultado = userService.deleteUser(id); 
+        // Tenta excluir o usuário
+        res.status(200).json(resultado); 
+        // Retorna a mensagem de sucesso
+    } catch (erro) {
+        res.status(404).json({ error: erro.message }); 
+        // Retorna a mensagem de erro
+    }
+});
+
+app.put("/users/:id", (req, res) =>{
+    const id = parseInt(req.params.id);
+    const {nome, email, endereco, senha, telefone, cpf} = req.body;
+    try{
+        const user = userService.updateUser(id, nome, email, endereco, senha, telefone, cpf);
+        res.status(200).json(user);
+    }catch(erro){
+        res.status(404).json({error: erro.message});
+    }
 });
 
 const port = 3000;
