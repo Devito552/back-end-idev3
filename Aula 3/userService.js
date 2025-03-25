@@ -1,6 +1,7 @@
 const User = require("./user");
 const path = require('path'); //modulo para manipular caminhos
 const fs = require('fs'); //modulo para manipular arquivos file system
+const bcrypt = require('bcryptjs'); //modulo para criptografar senha
 
 class userService {
     constructor() {
@@ -39,9 +40,10 @@ class userService {
         }
     }
 
-    addUser(nome, email, senha, endereco, telefone, cfp) { //função para adicionar usuario
+    async addUser(nome, email, senha, endereco, telefone, cfp) { //função para adicionar usuario
         try {
-            const user = new User(this.nextId++, nome, email, senha, endereco, telefone, cfp); //cria um novo usuario
+            const senhaCripto = await bcrypt.hash(senha, 10);
+            const user = new User(this.nextId++, nome, email, senhaCripto, endereco, telefone, cfp); //cria um novo usuario
             this.users.push(user);//adiciona o usuario no array
             this.saveUsers();//salva o usuario
             return user;

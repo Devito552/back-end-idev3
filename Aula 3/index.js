@@ -4,16 +4,16 @@ const userService = require('./userService');
 const app = express(); //nome qualquer para express
 app.use(express.json()); // vou habilitar json no express
 
-userService.loadUsers();
-userService.getNextId();
+// userService.loadUsers();
+// userService.getNextId();
 
-app.post("/users", (req, res) =>{
+app.post("/users", async (req, res) =>{
     const {nome, email, endereco, senha, telefone, cpf} = req.body;
     if(!nome || !email || !endereco || !senha || !telefone || !cpf){
         return res.status(400).json
         ({error: "Nome, email, endereço, senha, telefone e CPF são obrigatorios"})
     }
-    const user = userService.addUser(nome, email, endereco, senha, telefone, cpf);
+    const user = await userService.addUser(nome, email, endereco, senha, telefone, cpf);
 
 
     res.status(201).json({user});
