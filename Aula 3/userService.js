@@ -43,19 +43,13 @@ class userService {
 
     async addUser(nome, email, senha, endereco, telefone, cpf) { //função para adicionar usuario
         try {
-            const cpfexistente = this.users.some(user => user.cpf === cpf);
-            if (cpfexistente) {
-                throw new Error('CPF já cadastrado');
-            }
             const senhaCripto = await bcrypt.hash(senha, 10);
-
             const resultados = await mysql.execute(
                 `INSERT INTO usuarios (nome, email, senha, endereco, telefone, cpf)
                       VALUES (?, ?, ?, ?, ?, ?);`,
                       [nome, email, senhaCripto, endereco, telefone, cpf]
             );
             return resultados;
-
         } catch (erro) {
             console.log('Erro ao adicionar usuario', erro);
             throw erro;
@@ -83,17 +77,7 @@ class userService {
     async updateUser(id, nome, email, endereco, senha, telefone, cpf) {
         try {
 
-            const user = this.users.find(user => user.id === id);
-            if (!user) {
-                throw new Error('Usuario não encontrado');
-            }
-            if (cpf !== user.cpf) {
-                const cpfexistente = this.users.some(u => u.id !== id
-                    && u.cpf === cpf);
-                if (cpfexistente) {
-                    throw new Error('CPF já cadastrado');
-                }
-            }
+            
             const senhaCripto = await bcrypt.hash(senha, 10);
             user.nome = nome;
             user.email = email;
